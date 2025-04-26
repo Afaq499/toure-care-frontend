@@ -60,6 +60,10 @@ class ApiService {
     return this.api.get(`/tasks/status/${userId}`);
   }
 
+  async submitTask(taskId: string, data: { rating: number; review: string }): Promise<AxiosResponse> {
+    return this.api.post(`/tasks/submit/${taskId}`, data);
+  }
+
   // Helper method to set token
   setToken(token: string) {
     localStorage.setItem('token', token);

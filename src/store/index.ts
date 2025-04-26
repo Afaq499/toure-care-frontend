@@ -3,6 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import authReducer from './slices/authSlice';
 import travelHistoryReducer from './slices/travelHistorySlice';
+import taskSubmissionReducer from './slices/taskSubmissionSlice';
 
 const persistConfig = {
   key: 'root',
@@ -16,6 +17,7 @@ export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
     travelHistory: travelHistoryReducer,
+    taskSubmission: taskSubmissionReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

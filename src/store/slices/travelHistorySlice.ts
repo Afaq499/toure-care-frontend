@@ -14,6 +14,7 @@ interface Task {
   };
   status: 'pending' | 'completed';
   productPrice: number;
+  createdAt: string;
 }
 
 interface TravelHistoryState {
@@ -39,7 +40,7 @@ export const fetchTravelHistory = createAsyncThunk(
   async (userId: string, { rejectWithValue }) => {
     try {
       const response = await apiService.getTravelHistory(userId);
-      return response.data;
+      return response.data.tasks || []; // Access the data array from the response
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch travel history');
     }
@@ -58,10 +59,10 @@ const travelHistorySlice = createSlice({
       })
       .addCase(fetchTravelHistory.fulfilled, (state, action) => {
         state.loading = false;
-        state.tasks = action.payload.tasks;
-        state.totalTasks = action.payload.totalTasks;
-        state.completedTasks = action.payload.completedTasks;
-        state.pendingTasks = action.payload.pendingTasks;
+        state.tasks = action.payload;
+        state.totalTasks = action.payload.length;
+        state.completedTasks = action.payload.filter((task: Task) => task.status === 'completed').length;
+        state.pendingTasks = action.payload.filter((task: Task) => task.status === 'pending').length;
       })
       .addCase(fetchTravelHistory.rejected, (state, action) => {
         state.loading = false;
