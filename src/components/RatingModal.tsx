@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { submitTask } from '../store/slices/taskSubmissionSlice';
+import { fetchTravelHistory } from '../store/slices/travelHistorySlice';
 import { toast } from 'react-hot-toast';
+import { AppDispatch } from '../store';
 
 interface RatingModalProps {
   isOpen: boolean;
   onClose: () => void;
   taskId: string;
+  userId: string;
 }
 
-const RatingModal: React.FC<RatingModalProps> = ({ isOpen, onClose, taskId }) => {
+const RatingModal: React.FC<RatingModalProps> = ({ isOpen, onClose, taskId, userId }) => {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('');
   const [hover, setHover] = useState(0);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = async () => {
     if (rating === 0) {
@@ -26,7 +29,12 @@ const RatingModal: React.FC<RatingModalProps> = ({ isOpen, onClose, taskId }) =>
     }
 
     try {
+      // First submit the task
       await dispatch(submitTask({ taskId, rating, review })).unwrap();
+      
+      // Then fetch the updated travel history
+      await dispatch(fetchTravelHistory("undefined")).unwrap();
+      
       toast.success('Review submitted successfully!');
       onClose();
     } catch (error) {

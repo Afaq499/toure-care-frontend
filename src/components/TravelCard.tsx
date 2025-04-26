@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { TravelRecord } from '../types';
 import RatingModal from './RatingModal';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 interface TravelCardProps {
   travel: TravelRecord;
@@ -8,6 +10,7 @@ interface TravelCardProps {
 
 const TravelCard: React.FC<TravelCardProps> = ({ travel }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userId = useSelector((state: RootState) => state.auth.user?._id);
   const statusColor = travel.status === 'completed' 
     ? 'bg-green-500' 
     : travel.status === 'pending' 
@@ -62,6 +65,7 @@ const TravelCard: React.FC<TravelCardProps> = ({ travel }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         taskId={travel.id}
+        userId={userId || ''}
       />
     </>
   );
