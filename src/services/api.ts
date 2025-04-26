@@ -55,6 +55,11 @@ class ApiService {
     return this.api.post('/members/register', data);
   }
 
+  // Travel History endpoints
+  async getTravelHistory(userId: string): Promise<AxiosResponse> {
+    return this.api.get(`/tasks/status/${userId}`);
+  }
+
   // Helper method to set token
   setToken(token: string) {
     localStorage.setItem('token', token);

@@ -1,11 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { apiService } from '../../services/api';
 import { toast } from 'react-hot-toast';
-
-interface User {
-  username: string;
-  phoneNumber: string;
-}
+import { User } from '../../types';
 
 interface AuthState {
   user: User | null;
@@ -71,6 +67,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       apiService.removeToken();
       localStorage.removeItem('user');
+      localStorage.removeItem('token');
     },
     setCredentials: (state, action) => {
       const { user, token } = action.payload;
@@ -78,7 +75,30 @@ const authSlice = createSlice({
       state.token = token;
       state.isAuthenticated = true;
       apiService.setToken(token);
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
     },
+    rehydrate: (state) => {
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('user');
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          state.user = user;
+          state.token = token;
+          state.isAuthenticated = true;
+          apiService.setToken(token);
+        } catch (error) {
+          console.error('Error parsing stored user data:', error);
+          state.user = null;
+          state.token = null;
+          state.isAuthenticated = false;
+          apiService.removeToken();
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+        }
+      }
+    }
   },
   extraReducers: (builder) => {
     // Login
@@ -93,6 +113,8 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.isAuthenticated = true;
         apiService.setToken(action.payload.token);
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
         toast.success('Login successful!');
       })
       .addCase(login.rejected, (state, action) => {
@@ -113,6 +135,8 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.isAuthenticated = true;
         apiService.setToken(action.payload.token);
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
         toast.success('Registration successful!');
       })
       .addCase(register.rejected, (state, action) => {
@@ -123,6 +147,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, setCredentials } = authSlice.actions;
+export const { logout, setCredentials, rehydrate } = authSlice.actions;
 
 export default authSlice.reducer; 

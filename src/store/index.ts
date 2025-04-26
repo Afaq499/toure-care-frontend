@@ -1,7 +1,8 @@
-import { configureStore, combineReducers, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import authReducer from './slices/authSlice';
+import travelHistoryReducer from './slices/travelHistorySlice';
 
 const persistConfig = {
   key: 'root',
@@ -9,29 +10,20 @@ const persistConfig = {
   whitelist: ['auth'], // Only auth will be persisted
 };
 
-const rootReducer = combineReducers({
-  auth: authReducer,
-});
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    auth: persistedAuthReducer,
+    travelHistory: travelHistoryReducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
-      },
+      serializableCheck: false,
     }),
 });
 
 export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->; 
+export type AppDispatch = typeof store.dispatch; 

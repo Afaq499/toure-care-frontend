@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -12,8 +12,9 @@ import ReferralCode from './pages/ReferralCode';
 import FundInfo from './pages/FundInfo';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './store';
+import { rehydrate } from './store/slices/authSlice';
 import './index.css';
 
 // Protected Route wrapper component
@@ -28,6 +29,12 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 function AppRoutes() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(rehydrate());
+  }, [dispatch]);
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
@@ -51,7 +58,7 @@ function AppRoutes() {
 function App() {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={<div className="min-h-screen flex items-center justify-center">Loading...</div>} persistor={persistor}>
         <Router>
           <Toaster position="top-center" />
           <AppRoutes />

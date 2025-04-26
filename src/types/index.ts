@@ -9,12 +9,15 @@ export interface TravelRecord {
 }
 
 export interface User {
-  name: string;
-  referralCode: string;
-  walletBalance: number;
-  todaysRewards: number;
-  dailyTravel: number;
-  completedTravel: number;
+  _id: string;
+  username: string;
+  phoneNumber: string;
+  name?: string;
+  referralCode?: string;
+  walletBalance?: number;
+  todaysRewards?: number;
+  dailyTravel?: number;
+  completedTravel?: number;
 }
 
 export interface FundInfo {

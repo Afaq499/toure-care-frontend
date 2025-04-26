@@ -2,11 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-
-interface User {
-  username: string;
-  phoneNumber: string;
-}
+import { User } from '../types';
 
 interface AuthContextType {
   user: User | null;
