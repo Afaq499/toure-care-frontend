@@ -48,12 +48,12 @@ const Dashboard: React.FC = () => {
           </div>
           <span className="text-xs">FAQs</span>
         </Link>
-        <Link to="#" className="flex flex-col items-center">
+        {/* <Link to="#" className="flex flex-col items-center">
           <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mb-1">
             <Send size={20} className="text-yellow-600" />
           </div>
           <span className="text-xs">About Us</span>
-        </Link>
+        </Link> */}
       </div>
 
       <div className="mt-6">

@@ -4,6 +4,7 @@ import { Menu, X, Home, Clock, Wallet, Share2, CreditCard, User, HelpCircle, Log
 import { useAppDispatch } from '../store/hooks';
 import { logout } from '../store/slices/authSlice';
 import Logo from './Logo';
+import LiveSupportButton from './LiveSupportButton';
 
 const Layout: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -115,6 +116,7 @@ const Layout: React.FC = () => {
         <main className="pb-20">
           <Outlet />
         </main>
+        <LiveSupportButton />
       </div>
     </div>
   );
