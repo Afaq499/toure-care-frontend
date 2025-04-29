@@ -15,6 +15,9 @@ interface Task {
   status: 'pending' | 'completed';
   productPrice: number;
   createdAt: string;
+  percentage: number;
+  taskNumber: number;
+  isEdited?: boolean;
 }
 
 interface TravelHistoryState {

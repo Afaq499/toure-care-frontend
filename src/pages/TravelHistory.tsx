@@ -17,7 +17,15 @@ const TravelHistory: React.FC = () => {
     }
   }, [dispatch, user]);
 
-  const filteredTasks = tasks.filter(task => {
+  // Sort tasks by taskNumber
+  const sortedTasks = [...tasks].sort((a, b) => 
+    (a.taskNumber || 0) - (b.taskNumber || 0)
+  );
+
+  // Find the first incomplete task
+  const firstIncompleteTaskIndex = sortedTasks.findIndex(task => task.status === 'pending');
+
+  const filteredTasks = sortedTasks.filter(task => {
     if (activeFilter === 'all') return true;
     return task.status === activeFilter;
   });
@@ -70,7 +78,7 @@ const TravelHistory: React.FC = () => {
       </div>
       
       <div>
-        {filteredTasks.map((task) => (
+        {filteredTasks.map((task, index) => (
           <TravelCard
             key={task._id}
             travel={{
@@ -79,8 +87,10 @@ const TravelHistory: React.FC = () => {
               title: task.productId.name,
               status: task.status,
               price: task.productPrice,
-              rewards: task.productPrice * 0.01, // Assuming 1% reward rate
-              imageUrl: task.productId.image
+              rewards: task.productPrice * (task.percentage ? task.percentage/100: 0.008),
+              imageUrl: task.productId.image,
+              isEdit: task.isEdited,
+              canSubmit: task.status === 'pending' && index === firstIncompleteTaskIndex
             }}
           />
         ))}

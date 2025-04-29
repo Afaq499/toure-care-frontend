@@ -5,12 +5,14 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
 interface TravelCardProps {
-  travel: TravelRecord;
+  travel: TravelRecord & { canSubmit?: boolean };
 }
 
 const TravelCard: React.FC<TravelCardProps> = ({ travel }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const userId = useSelector((state: RootState) => state.auth.user?._id);
+  const userBalance = useSelector((state: RootState) => state.auth.user?.balance || 0);
+
   const statusColor = travel.status === 'completed' 
     ? 'bg-green-500' 
     : travel.status === 'pending' 
@@ -39,7 +41,7 @@ const TravelCard: React.FC<TravelCardProps> = ({ travel }) => {
             <div className="text-sm text-gray-600 font-medium">Price</div>
             <div className="text-lg font-bold text-gray-800">
               <span className="text-sm font-medium text-gray-500 mr-1">USDT</span>
-              {travel.price.toFixed(2)}
+              {travel.price?.toFixed(2)}
             </div>
           </div>
           <div className="flex justify-between items-center pt-3">
@@ -50,7 +52,7 @@ const TravelCard: React.FC<TravelCardProps> = ({ travel }) => {
             </div>
           </div>
         </div>
-        {travel.status === 'pending' && (
+        {travel.status === 'pending' && travel.canSubmit && (
           <div className="px-5 pb-5">
             <button 
               className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg transition duration-200 font-medium shadow-md hover:shadow-lg"
@@ -66,6 +68,9 @@ const TravelCard: React.FC<TravelCardProps> = ({ travel }) => {
         onClose={() => setIsModalOpen(false)}
         taskId={travel.id}
         userId={userId || ''}
+        userBalance={userBalance}
+        productPrice={travel.price}
+        isEdit={travel.isEdit}
       />
     </>
   );

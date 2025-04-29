@@ -6,6 +6,8 @@ export interface TravelRecord {
   price: number;
   rewards: number;
   imageUrl: string;
+  isEdit?: boolean;
+  canSubmit?: boolean;
 }
 
 export interface User {
@@ -18,6 +20,7 @@ export interface User {
   todaysRewards?: number;
   dailyTravel?: number;
   completedTravel?: number;
+  balance?: number;
 }
 
 export interface FundInfo {
