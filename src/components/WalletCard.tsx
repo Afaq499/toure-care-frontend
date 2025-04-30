@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface WalletCardProps {
   walletBalance: number;
@@ -13,6 +14,12 @@ const WalletCard: React.FC<WalletCardProps> = ({
   dailyTravel,
   completedTravel
 }) => {
+  const navigate = useNavigate();
+
+  const handleStartTravel = () => {
+    navigate('/travel-history');
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <div className="grid grid-cols-2">
@@ -34,7 +41,10 @@ const WalletCard: React.FC<WalletCardProps> = ({
         </div>
       </div>
       <div className="p-4">
-        <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md transition duration-200 font-medium">
+        <button 
+          onClick={handleStartTravel}
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md transition duration-200 font-medium"
+        >
           Start Travel
         </button>
       </div>

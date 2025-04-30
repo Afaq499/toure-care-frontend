@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { toast } from 'react-hot-toast';
 
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
 
 class ApiService {
   private api: AxiosInstance;
@@ -43,6 +43,10 @@ class ApiService {
   // Auth endpoints
   async login(username: string, password: string): Promise<AxiosResponse> {
     return this.api.post('/auth/login', { username, password });
+  }
+
+  async getUser(): Promise<AxiosResponse> {
+    return this.api.get('/members/member-detail');
   }
 
   async register(data: {

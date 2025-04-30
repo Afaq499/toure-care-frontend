@@ -13,8 +13,8 @@ import FundInfo from './pages/FundInfo';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from './store';
-import { rehydrate } from './store/slices/authSlice';
+import { RootState, AppDispatch } from './store';
+import { rehydrate, getUser } from './store/slices/authSlice';
 import './index.css';
 
 // Protected Route wrapper component
@@ -29,11 +29,18 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 function AppRoutes() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     dispatch(rehydrate());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(getUser());
+    }
+  }, [dispatch, isAuthenticated]);
 
   return (
     <Routes>

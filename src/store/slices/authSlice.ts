@@ -9,6 +9,7 @@ interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  isFetchUser: boolean;
 }
 
 interface LoginCredentials {
@@ -30,6 +31,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  isFetchUser: false
 };
 
 // Async thunks
@@ -39,6 +41,32 @@ export const login = createAsyncThunk(
     try {
       const response = await apiService.login(credentials.username, credentials.password);
       return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Login failed');
+    }
+  }
+);
+
+export const getUser = createAsyncThunk(
+  'auth/user',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await apiService.getUser();
+      // Map the API response to match our User type
+      const userData = {
+        _id: response.data.data._id,
+        username: response.data.data.name,
+        phoneNumber: response.data.data.mobileNumber,
+        balance: response.data.data.balance,
+        todaysRewards: response.data.data.todaysCommission,
+        dailyTravel: response.data.data.dailyAvailableOrders,
+        completedTravel: response.data.data.todaysOrders,
+        referralCode: response.data.data.invitationCode,
+        taskStats: response.data.data.taskStats,
+        totalEarnings: response.data.data.totalEarnings,
+        todaysEarnings: response.data.data.todaysEarnings,
+      };
+      return { user: userData };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
     }
@@ -98,6 +126,9 @@ const authSlice = createSlice({
           localStorage.removeItem('token');
         }
       }
+    },
+    setFetchUser: (state, action) => {
+      state.isFetchUser = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -118,6 +149,24 @@ const authSlice = createSlice({
         toast.success('Login successful!');
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        toast.error(action.payload as string);
+      });
+
+    //gte user
+    builder
+      .addCase(getUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        console.log("action.payload => ", action.payload)
+        state.loading = false;
+        state.user = action.payload.user;
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
+      })
+      .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         toast.error(action.payload as string);
@@ -147,6 +196,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, setCredentials, rehydrate } = authSlice.actions;
+export const { logout, setCredentials, rehydrate, setFetchUser } = authSlice.actions;
 
 export default authSlice.reducer; 

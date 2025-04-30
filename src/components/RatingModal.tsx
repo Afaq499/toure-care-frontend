@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
 import { submitTask } from '../store/slices/taskSubmissionSlice';
 import { fetchTravelHistory } from '../store/slices/travelHistorySlice';
+import { getUser } from '../store/slices/authSlice';
 import { toast } from 'react-hot-toast';
 import { AppDispatch } from '../store';
 
@@ -51,6 +52,9 @@ const RatingModal: React.FC<RatingModalProps> = ({
       
       // Then fetch the updated travel history
       await dispatch(fetchTravelHistory("undefined")).unwrap();
+      
+      // Fetch updated user information
+      await dispatch(getUser()).unwrap();
       
       toast.success('Review submitted successfully!');
       onClose();

@@ -21,6 +21,13 @@ export interface User {
   dailyTravel?: number;
   completedTravel?: number;
   balance?: number;
+  todaysEarnings?: number;
+  totalEarnings?: number;
+  taskStats: {
+    totalTasks: number;
+    completedTasks: number;
+    pendingTasks: number;
+  };
 }
 
 export interface FundInfo {
