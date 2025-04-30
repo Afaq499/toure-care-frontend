@@ -23,11 +23,18 @@ export interface User {
   balance?: number;
   todaysEarnings?: number;
   totalEarnings?: number;
-  taskStats: {
+  taskStats?: {
     totalTasks: number;
     completedTasks: number;
     pendingTasks: number;
   };
+  account: {
+    _id: string;
+    fullName: string;
+    cryptoAddress: string;
+    network: 'TRC20' | 'ERC20' | 'BTC';
+    phoneNumber: string;
+  }
 }
 
 export interface FundInfo {

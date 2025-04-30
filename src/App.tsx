@@ -12,6 +12,8 @@ import ReferralCode from './pages/ReferralCode';
 import FundInfo from './pages/FundInfo';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import TermsAndConditions from './pages/TermsAndConditions';
+import FAQ from './pages/FAQ';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from './store';
 import { rehydrate, getUser } from './store/slices/authSlice';
@@ -57,6 +59,8 @@ function AppRoutes() {
         <Route path="deposit" element={<Deposit />} />
         <Route path="referral" element={<ReferralCode />} />
         <Route path="fund-info" element={<FundInfo />} />
+        <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="faq" element={<FAQ />} />
       </Route>
     </Routes>
   );

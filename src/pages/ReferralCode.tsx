@@ -1,12 +1,23 @@
 import React from 'react';
-import { userData } from '../data/mockData';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 import Logo from '../components/Logo';
+import { QRCodeSVG } from 'qrcode.react';
+import { toast } from 'react-hot-toast';
 
 const ReferralCode: React.FC = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(userData.referralCode);
-    alert('Referral code copied to clipboard!');
+    if (user?.referralCode) {
+      navigator.clipboard.writeText(user.referralCode);
+      toast.success('Referral code copied to clipboard!');
+    }
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col items-center p-4 min-h-[80vh] bg-gradient-to-b from-gray-900 to-gray-800 text-white">
@@ -15,15 +26,18 @@ const ReferralCode: React.FC = () => {
       </div>
       
       <div className="w-48 h-48 bg-white p-2 rounded-lg mb-8">
-        {/* This would be a QR code in a real app */}
-        <div className="w-full h-full flex items-center justify-center bg-gray-200">
-          <div className="text-black text-xs">QR Code for {userData.referralCode}</div>
-        </div>
+        <QRCodeSVG
+          value={user.referralCode || ''}
+          size={180}
+          level="H"
+          includeMargin={true}
+          className="w-full h-full"
+        />
       </div>
       
       <div className="text-center mb-6">
         <div className="text-sm opacity-80 mb-1">Referral Code</div>
-        <div className="text-xl font-bold">{userData.referralCode}</div>
+        <div className="text-xl font-bold">{user.referralCode}</div>
       </div>
       
       <button 

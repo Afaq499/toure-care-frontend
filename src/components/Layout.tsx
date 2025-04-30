@@ -97,7 +97,12 @@ const Layout: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="flex items-center text-white" onClick={toggleMenu}>
+                <Link to="#" className="flex items-center text-white" onClick={() => {
+                  toggleMenu();
+                  if (window.Tawk_API) {
+                    window.Tawk_API.toggle();
+                  }
+                }}>
                   <HelpCircle size={20} className="mr-3" />
                   <span>Help</span>
                 </Link>

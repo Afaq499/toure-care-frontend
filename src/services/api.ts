@@ -68,6 +68,16 @@ class ApiService {
     return this.api.post(`/tasks/submit/${taskId}`, data);
   }
 
+  // Account endpoints
+  async createAccount(data: {
+    fullName: string;
+    cryptoAddress: string;
+    network: 'TRC20' | 'ERC20' | 'BTC';
+    phoneNumber: string;
+  }): Promise<AxiosResponse> {
+    return this.api.post('/accounts', data);
+  }
+
   // Helper method to set token
   setToken(token: string) {
     localStorage.setItem('token', token);

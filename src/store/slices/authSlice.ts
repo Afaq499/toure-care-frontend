@@ -65,6 +65,7 @@ export const getUser = createAsyncThunk(
         taskStats: response.data.data.taskStats,
         totalEarnings: response.data.data.totalEarnings,
         todaysEarnings: response.data.data.todaysEarnings,
+        account: response.data.data.account
       };
       return { user: userData };
     } catch (error: any) {
