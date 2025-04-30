@@ -70,6 +70,7 @@ const TravelCard: React.FC<TravelCardProps> = ({ travel }) => {
         userId={userId || ''}
         userBalance={userBalance}
         productPrice={travel.price}
+        rewards={travel.rewards}
         isEdit={travel.isEdit}
       />
     </>

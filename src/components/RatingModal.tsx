@@ -15,6 +15,7 @@ interface RatingModalProps {
   userBalance: number;
   productPrice: number;
   isEdit?: boolean;
+  rewards: number;
 }
 
 const RatingModal: React.FC<RatingModalProps> = ({
@@ -24,7 +25,8 @@ const RatingModal: React.FC<RatingModalProps> = ({
   userId,
   userBalance,
   productPrice,
-  isEdit
+  isEdit,
+  rewards
 }) => {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('');
@@ -79,18 +81,36 @@ const RatingModal: React.FC<RatingModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">Submit Task</h2>
-        
-        {hasInsufficientBalance ? (
-          <div className="mb-4">
-            <p className="text-red-500 font-medium">
-              Insufficient Balance
-            </p>
-            <p className="text-gray-600 mt-2">
-              You need {balanceDifference.toFixed(2)} USDT more to complete this task.
-            </p>
+      <div className="bg-gray-100 rounded-xl p-4 w-full max-w-md">
+        <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+          <div className="mb-4 flex justify-between">
+            <div className="text-xl font-bold text-gray-900">My Balance</div>
+            <div className="text-xl font-bold text-gray-900">$-{balanceDifference.toFixed(2)}</div>
           </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div className="text-center">
+              <div className="flex flex-col items-center bg-gray-50 rounded-lg p-3">
+                <span className="text-sm text-gray-600">Commission</span>
+                <span className="font-semibold">${rewards.toFixed(2)}</span>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="flex flex-col items-center bg-gray-50 rounded-lg p-3">
+                <span className="text-sm text-gray-600">Pending Trek</span>
+                <span className="font-semibold">4</span>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="flex flex-col items-center bg-gray-50 rounded-lg p-3">
+                <span className="text-sm text-gray-600">Trek Completed</span>
+                <span className="font-semibold">26</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {hasInsufficientBalance ? (null
         ) : (
           <>
             <div className="mb-4">

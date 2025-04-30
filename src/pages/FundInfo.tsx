@@ -12,6 +12,7 @@ const FundInfo: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [hasExistingAccount, setHasExistingAccount] = useState(false);
 
   useEffect(() => {
     const fetchUserAccount = async () => {
@@ -20,18 +21,21 @@ const FundInfo: React.FC = () => {
         const userData = response.data.data;
         
         // Pre-populate form with user data if available
-        if (userData) {
+        if (userData?.account) {
           setFormData({
-            fullName: userData?.account?.fullName || '',
-            cryptoAddress: userData?.account?.cryptoAddress || '',
-            phoneNumber: userData?.account?.phoneNumber || '',
-            network: userData?.account?.network || 'TRC20'
+            fullName: userData.account.fullName || '',
+            cryptoAddress: userData.account.cryptoAddress || '',
+            phoneNumber: userData.account.phoneNumber || '',
+            network: userData.account.network || 'TRC20'
           });
           
           // Set network if available
-          if (userData?.account?.network) {
-            setNetwork(userData?.account?.network);
+          if (userData.account.network) {
+            setNetwork(userData.account.network);
           }
+
+          // Set hasExistingAccount if we have account data
+          setHasExistingAccount(true);
         }
       } catch (error) {
         console.error('Error fetching user account:', error);
@@ -44,6 +48,7 @@ const FundInfo: React.FC = () => {
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (hasExistingAccount) return; // Prevent changes in read-only mode
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -62,7 +67,7 @@ const FundInfo: React.FC = () => {
 
       // Handle successful response
       toast.success('Account information saved successfully!');
-      // You might want to redirect or update UI state here
+      setHasExistingAccount(true);
     } catch (error) {
       // Error is already handled by the API service interceptor
       console.error('Error creating account:', error);
@@ -83,7 +88,10 @@ const FundInfo: React.FC = () => {
     <div className="p-4">
       <div className="mb-6">
         <p className="text-sm text-gray-600">
-          Dear user, please check that information you have provided is correct to ensure that your withdrawal will not be delayed, thank you.
+          {hasExistingAccount 
+            ? "Your account information is shown below."
+            : "Dear user, please check that information you have provided is correct to ensure that your withdrawal will not be delayed, thank you."
+          }
         </p>
       </div>
       
@@ -96,7 +104,8 @@ const FundInfo: React.FC = () => {
             value={formData.fullName}
             onChange={handleInputChange}
             placeholder="Full Name" 
-            className="w-full bg-transparent outline-none"
+            className={`w-full bg-transparent outline-none ${hasExistingAccount ? 'text-gray-700 cursor-not-allowed' : ''}`}
+            readOnly={hasExistingAccount}
           />
         </div>
         
@@ -108,40 +117,44 @@ const FundInfo: React.FC = () => {
             value={formData.cryptoAddress}
             onChange={handleInputChange}
             placeholder="Crypto Address" 
-            className="w-full bg-transparent outline-none"
+            className={`w-full bg-transparent outline-none ${hasExistingAccount ? 'text-gray-700 cursor-not-allowed' : ''}`}
+            readOnly={hasExistingAccount}
           />
         </div>
         
         <div className="bg-white rounded-lg shadow-sm p-4">
           <div className="text-sm text-gray-500 mb-3">Network</div>
           <div className="flex space-x-4">
-            <label className="flex items-center">
+            <label className={`flex items-center ${hasExistingAccount ? 'cursor-not-allowed' : ''}`}>
               <input 
                 type="radio" 
                 name="network" 
                 checked={network === 'TRC20'} 
-                onChange={() => setNetwork('TRC20')} 
+                onChange={() => !hasExistingAccount && setNetwork('TRC20')} 
                 className="mr-2"
+                disabled={hasExistingAccount}
               />
               TRC20
             </label>
-            <label className="flex items-center">
+            <label className={`flex items-center ${hasExistingAccount ? 'cursor-not-allowed' : ''}`}>
               <input 
                 type="radio" 
                 name="network" 
                 checked={network === 'ERC20'} 
-                onChange={() => setNetwork('ERC20')} 
+                onChange={() => !hasExistingAccount && setNetwork('ERC20')} 
                 className="mr-2"
+                disabled={hasExistingAccount}
               />
               ERC20
             </label>
-            <label className="flex items-center">
+            <label className={`flex items-center ${hasExistingAccount ? 'cursor-not-allowed' : ''}`}>
               <input 
                 type="radio" 
                 name="network" 
                 checked={network === 'BTC'} 
-                onChange={() => setNetwork('BTC')} 
+                onChange={() => !hasExistingAccount && setNetwork('BTC')} 
                 className="mr-2"
+                disabled={hasExistingAccount}
               />
               BTC
             </label>
@@ -156,18 +169,21 @@ const FundInfo: React.FC = () => {
             value={formData.phoneNumber}
             onChange={handleInputChange}
             placeholder="Phone Number" 
-            className="w-full bg-transparent outline-none"
+            className={`w-full bg-transparent outline-none ${hasExistingAccount ? 'text-gray-700 cursor-not-allowed' : ''}`}
+            readOnly={hasExistingAccount}
           />
         </div>
       </div>
       
-      <button 
-        onClick={handleSubmit}
-        disabled={isLoading}
-        className={`w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-md transition duration-200 font-medium mt-6 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-      >
-        {isLoading ? 'PROCESSING...' : 'CONFIRM'}
-      </button>
+      {!hasExistingAccount && (
+        <button 
+          onClick={handleSubmit}
+          disabled={isLoading}
+          className={`w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-md transition duration-200 font-medium mt-6 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          {isLoading ? 'PROCESSING...' : 'CONFIRM'}
+        </button>
+      )}
     </div>
   );
 };
