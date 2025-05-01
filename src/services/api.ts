@@ -42,7 +42,7 @@ class ApiService {
 
   // Auth endpoints
   async login(username: string, password: string): Promise<AxiosResponse> {
-    return this.api.post('/auth/login', { username, password });
+    return this.api.post('/auth/member/login', { username, password });
   }
 
   async getUser(): Promise<AxiosResponse> {
