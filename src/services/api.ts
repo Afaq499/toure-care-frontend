@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast';
 
 // API Configuration
 // const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://13.48.219.140/api/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.tour-care.com/api';
 
 class ApiService {
   private api: AxiosInstance;
