@@ -17,13 +17,13 @@ const TravelHistory: React.FC = () => {
     }
   }, [dispatch, user]);
 
-  // Sort tasks by taskNumber
+  // Sort tasks by task number
   const sortedTasks = [...tasks].sort((a, b) => 
     (a.taskNumber || 0) - (b.taskNumber || 0)
   );
 
-  // Find the first incomplete task
-  const firstIncompleteTaskIndex = sortedTasks.findIndex(task => task.status === 'pending');
+  // Get all pending tasks in order
+  const pendingTasks = sortedTasks.filter(task => task.status === 'pending');
 
   const filteredTasks = sortedTasks.filter(task => {
     if (activeFilter === 'all') return true;
@@ -78,22 +78,27 @@ const TravelHistory: React.FC = () => {
       </div>
       
       <div>
-        {filteredTasks.map((task, index) => (
-          <TravelCard
-            key={task._id}
-            travel={{
-              id: task._id,
-              date: new Date(task.productId.createdAt).toLocaleString(),
-              title: task.productId.name,
-              status: task.status,
-              price: task.productId?.price || 0,
-              rewards: (task.productId?.price || 0) * (task.percentage ? task.percentage/100: 0.008),
-              imageUrl: task.productId.image,
-              isEdit: task.isEdited,
-              canSubmit: task.status === 'pending' && index === firstIncompleteTaskIndex
-            }}
-          />
-        ))}
+        {filteredTasks.map((task, index) => {
+          // Find the position of the current task in pending tasks
+          const pendingIndex = pendingTasks.findIndex(t => t._id === task._id);
+          
+          return (
+            <TravelCard
+              key={task._id}
+              travel={{
+                id: task._id,
+                date: new Date(task.productId.createdAt).toLocaleString(),
+                title: task.productId.name,
+                status: task.status,
+                price: task.productId?.price || 0,
+                rewards: (task.productId?.price || 0) * (task.percentage ? task.percentage/100: 0.008),
+                imageUrl: task.productId.image,
+                isEdit: task.isEdited,
+                canSubmit: task.status === 'pending' && pendingIndex === 0
+              }}
+            />
+          );
+        })}
         
         {filteredTasks.length === 0 && (
           <div className="text-center py-8">
