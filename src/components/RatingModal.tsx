@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { submitTask } from '../store/slices/taskSubmissionSlice';
 import { fetchTravelHistory } from '../store/slices/travelHistorySlice';
 import { getUser } from '../store/slices/authSlice';
@@ -33,9 +33,10 @@ const RatingModal: React.FC<RatingModalProps> = ({
   const [hover, setHover] = useState(0);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { pendingTasks, completedTasks } = useAppSelector((state) => state.travelHistory);
 
   const handleSubmit = async () => {
-    if (isEdit && userBalance < productPrice) {
+    if (userBalance < productPrice) {
       return; // Don't submit if insufficient balance
     }
     
@@ -76,17 +77,21 @@ const RatingModal: React.FC<RatingModalProps> = ({
 
   if (!isOpen) return null;
 
-  const balanceDifference = productPrice - userBalance;
-  const hasInsufficientBalance = isEdit && userBalance < productPrice;
+  const balanceDifference = userBalance - productPrice;
+  const hasInsufficientBalance = userBalance < productPrice;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-gray-100 rounded-xl p-4 w-full max-w-md">
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-          <div className="mb-4 flex justify-between">
-            <div className="text-xl font-bold text-gray-900">My Balance</div>
-            <div className="text-xl font-bold text-gray-900">$-{balanceDifference.toFixed(2)}</div>
-          </div>
+          {
+            hasInsufficientBalance && (
+              <div className="mb-4 flex justify-between">
+                <div className="text-xl font-bold text-gray-900">My Balance</div>
+                <div className="text-xl font-bold text-gray-900">${balanceDifference.toFixed(2)}</div>
+              </div>
+            )
+          }
 
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
@@ -98,13 +103,13 @@ const RatingModal: React.FC<RatingModalProps> = ({
             <div className="text-center">
               <div className="flex flex-col items-center bg-gray-50 rounded-lg p-3">
                 <span className="text-sm text-gray-600">Pending Trek</span>
-                <span className="font-semibold">4</span>
+                <span className="font-semibold">{pendingTasks}</span>
               </div>
             </div>
             <div className="text-center">
               <div className="flex flex-col items-center bg-gray-50 rounded-lg p-3">
-                <span className="text-sm text-gray-600">Trek Completed</span>
-                <span className="font-semibold">26</span>
+                <span className="text-sm text-gray-600" style={{ width: '200px' }}>Trek Completed</span>
+                <span className="font-semibold">{completedTasks}</span>
               </div>
             </div>
           </div>

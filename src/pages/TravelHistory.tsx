@@ -86,8 +86,8 @@ const TravelHistory: React.FC = () => {
               date: new Date(task.productId.createdAt).toLocaleString(),
               title: task.productId.name,
               status: task.status,
-              price: task.productPrice,
-              rewards: task.productPrice * (task.percentage ? task.percentage/100: 0.008),
+              price: task.productId?.price || 0,
+              rewards: (task.productId?.price || 0) * (task.percentage ? task.percentage/100: 0.008),
               imageUrl: task.productId.image,
               isEdit: task.isEdited,
               canSubmit: task.status === 'pending' && index === firstIncompleteTaskIndex

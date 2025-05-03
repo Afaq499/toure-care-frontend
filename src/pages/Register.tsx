@@ -19,13 +19,18 @@ const Register: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/login');
     }
   }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(register(formData));
+    try {
+      await dispatch(register(formData)).unwrap();
+      navigate('/login');
+    } catch (error) {
+      // Error is already handled by the auth slice
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

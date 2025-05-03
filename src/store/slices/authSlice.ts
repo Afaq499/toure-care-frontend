@@ -181,13 +181,8 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        apiService.setToken(action.payload.token);
-        localStorage.setItem('token', action.payload.token);
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
-        toast.success('Registration successful!');
+        state.error = null;
+        toast.success('Registration successful! Please login to continue.');
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
