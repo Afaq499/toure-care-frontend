@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { register } from '../store/slices/authSlice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import Logo from '../components/Logo';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { register } from "../store/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import Logo from "../components/Logo";
+import { Compass } from "lucide-react";
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
-    phoneNumber: '',
-    username: '',
-    withdrawPassword: '',
-    loginPassword: '',
-    referralCode: '',
+    phoneNumber: "",
+    username: "",
+    withdrawPassword: "",
+    loginPassword: "",
+    referralCode: "",
   });
-  
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading, isAuthenticated } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [isAuthenticated, navigate]);
 
@@ -27,7 +28,7 @@ const Register: React.FC = () => {
     e.preventDefault();
     try {
       await dispatch(register(formData)).unwrap();
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
       // Error is already handled by the auth slice
     }
@@ -35,21 +36,24 @@ const Register: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
-        <div className="flex justify-center mb-8">
-          <Logo />
-        </div>
-        
+        <h1 className="text-xl font-semibold flex items-center justify-center mb-5">
+          <span className="text-black">Tour</span>
+          <Compass size={24} className="mx-1 text-orange-500" />
+          <span className="text-orange-500">Cares</span>
+        </h1>
         <h1 className="text-2xl font-bold mb-8">Register Now</h1>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone Number
+            </label>
             <input
               type="tel"
               name="phoneNumber"
@@ -62,7 +66,9 @@ const Register: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Username
+            </label>
             <input
               type="text"
               name="username"
@@ -75,7 +81,9 @@ const Register: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Withdraw Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Withdraw Password
+            </label>
             <input
               type="password"
               name="withdrawPassword"
@@ -88,7 +96,9 @@ const Register: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Login Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Login Password
+            </label>
             <input
               type="password"
               name="loginPassword"
@@ -101,7 +111,9 @@ const Register: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Referral Code (Optional)</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Referral Code (Optional)
+            </label>
             <input
               type="text"
               name="referralCode"
@@ -117,13 +129,16 @@ const Register: React.FC = () => {
             disabled={loading}
             className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 mt-6"
           >
-            {loading ? 'Registering...' : 'Register Now'}
+            {loading ? "Registering..." : "Register Now"}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">Already have an account?</p>
-          <Link to="/login" className="text-orange-500 hover:text-orange-600 font-medium">
+          <Link
+            to="/login"
+            className="text-orange-500 hover:text-orange-600 font-medium"
+          >
             Login Now
           </Link>
         </div>
@@ -132,4 +147,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register; 
+export default Register;

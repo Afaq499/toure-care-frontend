@@ -28,7 +28,7 @@ const WalletCard: React.FC<WalletCardProps> = ({
           <div className="text-lg font-semibold">$ {walletBalance.toFixed(2)}</div>
         </div>
         <div className="p-4 border-b">
-          <div className="text-sm text-gray-500">Today's Rewards</div>
+          <div className="text-sm text-gray-500">Today's Commission</div>
           <div className="text-lg font-semibold">$ {todaysRewards.toFixed(2)}</div>
         </div>
         <div className="p-4 border-r">
