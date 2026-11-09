@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-// Dev server calls the local API. Production builds call the production API.
-const API_BASE_URL = import.meta.env.DEV
+// Localhost is for this machine only. Any other host, including a dev server
+// deployed on the server, calls the production API.
+const isLocalHost =
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+const API_BASE_URL = isLocalHost
   ? 'http://localhost:5000/api'
   : 'https://api.tour-care.com/api';
 
